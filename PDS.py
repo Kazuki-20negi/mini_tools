@@ -10,7 +10,6 @@ def _display_directory(_cd, _list,_level):
         #    print("│ "*_level+"└──"+i)
         print("│ "*_level+"├─"+i)
         if not Path(target_path).is_file():
-            #print("│    ├──",os.listdir(Path(_cd)))
             _display_directory(target_path, os.listdir(target_path),_level+1)
 
 _now_directory=input("現在の絶対パスを入力してください")
