@@ -7,12 +7,26 @@ GREEN = '\033[32m'
 RESET = '\033[0m'
 _except_list=[]
 
+def _file_size(_path):
+    _size=float(os.path.getsize(_path))
+    if os.path.getsize(_path)>=1024:
+        _size=_size/1024
+        if _size>=1024:
+            _size=_size/1024
+            if _size>=1024:
+                _size=_size/1024
+                return " ("+str(_size)+"GB)"
+            return " ("+str(_size)+"MB)"
+        return " ("+str(_size)+"KB)"
+    else:
+        return " ("+str(_size)+"B)"
+
 def _display_directory(_cd, _list,_prefix, _except_list):
     for index, i in enumerate(_list):
         target_path = _cd / i
         if not Path(target_path).is_file():
-            i2=GREEN+i+RESET
-        else:i2=i
+            i2=GREEN+i+RESET+_file_size(target_path)
+        else:i2=i+_file_size(target_path)
 
         if index == len(_list) - 1:
             if not Path(target_path).is_file() and not i in _except_list:
