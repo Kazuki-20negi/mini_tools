@@ -15,17 +15,17 @@ def _file_size(_path):
             _size=_size/1024
             if _size>=1024:
                 _size=_size/1024
-                return " ("+str(_size)+"GB)"
-            return " ("+str(_size)+"MB)"
-        return " ("+str(_size)+"KB)"
+                return " ("+f"{_size:.1f}GB)"
+            return " ("+f"{_size:.1f}MB)"
+        return " ("+f"{_size:.1f}KB)"
     else:
-        return " ("+str(_size)+"B)"
+        return " ("+f"{_size:.1f}B)"
 
 def _display_directory(_cd, _list,_prefix, _except_list):
     for index, i in enumerate(_list):
         target_path = _cd / i
         if not Path(target_path).is_file():
-            i2=GREEN+i+RESET+_file_size(target_path)
+            i2=GREEN+i+RESET#+_file_size(target_path)
         else:i2=i+_file_size(target_path)
 
         if index == len(_list) - 1:
