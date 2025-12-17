@@ -15,7 +15,7 @@ args = parser.parse_args()
 
 #文字種定義
 alphabet = string.ascii_letters + string.digits
-punctuation = "-*/._:;[]#()"
+punctuation = "-*/._:;[]#()$%&"
 candidates = alphabet + punctuation
 
 if args.unicode: #ひらがなと漢字一部
