@@ -12,9 +12,9 @@ H_S = 8500          # スケールハイト (空気密度の減少率) [m]
 
 # --- 弾道・環境パラメータ（ユーザー設定） ---
 Cd = 0.25            # 抗力係数
-Area = 0.000069    # 前面投影面積 [m^2]
-mass = 0.3         # 質量 [kg]
-v0 = 2230.0         # 初速 [m/s]
+Area = 0.00034    # 前面投影面積 [m^2]
+mass = 1.4       # 質量 [kg]
+v0 = 2700.0         # 初速 [m/s]
 angle_deg = 45.0    # 打ち上げ角度 [度]
 
 # --- 運動方程式 (微分方程式) ---
@@ -84,7 +84,7 @@ y0 = [initial_r, initial_theta, initial_v_r, initial_omega]
 
 # --- 計算実行 ---
 print("計算中……")
-t_span = [0, 10000] # 最大10000秒まで計算
+t_span = [0, 100000] # 最大10000秒まで計算
 sol = solve_ivp(equations, t_span, y0, events=hit_ground, rtol=1e-6, atol=1e-12, max_step=0.5)
 
 # --- 結果の表示 ---
