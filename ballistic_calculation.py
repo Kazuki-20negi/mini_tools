@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
+from matplotlib.patches import Circle
 import matplotlib as mpl
 
 # --- 定数設定 ---
@@ -14,8 +15,8 @@ H_S = 8500          # スケールハイト (空気密度の減少率) [m]
 Cd = 0.25            # 抗力係数
 Area = 0.00034    # 前面投影面積 [m^2]
 mass = 1.4       # 質量 [kg]
-v0 = 2700.0         # 初速 [m/s]
-angle_deg = 45.0    # 打ち上げ角度 [度]
+v0 = 76000.0         # 初速 [m/s]
+angle_deg = 9.0    # 打ち上げ角度 [度]
 
 # --- 運動方程式 (微分方程式) ---
 def equations(t, state):
@@ -84,7 +85,7 @@ y0 = [initial_r, initial_theta, initial_v_r, initial_omega]
 
 # --- 計算実行 ---
 print("計算中……")
-t_span = [0, 100000] # 最大10000秒まで計算
+t_span = [0, 200000] # 最大10000秒まで計算
 sol = solve_ivp(equations, t_span, y0, events=hit_ground, rtol=1e-6, atol=1e-12, max_step=0.5)
 
 # --- 結果の表示 ---
@@ -100,43 +101,79 @@ print(f"飛行時間: {flight_time:.2f} 秒")
 print(f"最高高度: {(np.max(sol.y[0]) - R_EARTH)/1000:.2f} km")
 print(f"着弾距離(地表距離): {ground_distance/1000:.2f} km")
 
+
+
 # 必要であればここでグラフ描画を行います
 r_data = sol.y[0]
 theta_data = sol.y[1]
 mpl.rcParams['font.family'] = 'Meiryo'
 
-# 横軸：地表に沿った距離 [km]
-x_plot = (R_EARTH * theta_data) / 1000.0
-# 縦軸：高度 [km]
-y_plot = (r_data - R_EARTH) / 1000.0
+# ==========================================
+fig, axes = plt.subplots(2, 1, figsize=(10, 14)) # 縦に2つのグラフエリアを作成
 
-# グラフの作成
-fig, ax = plt.subplots(figsize=(10, 5)) # 横長のグラフエリアを作成
+# 共通データ（単位をkmに変換）
+r_km = r_data / 1000.0
+R_EARTH_KM = R_EARTH / 1000.0
+ax1 = axes[0]
+x_plot1 = (R_EARTH * theta_data) / 1000.0
+y_plot1 = r_km - R_EARTH_KM
 
-# 軌跡をプロット
-ax.plot(x_plot, y_plot, 'b-', linewidth=2, label='弾道軌跡')
+ax1.plot(x_plot1, y_plot1, 'b-', linewidth=2, label='Trajectory')
+# 最高点、発射点、着弾点のプロット
+max_idx = np.argmax(y_plot1)
+ax1.plot(x_plot1[max_idx], y_plot1[max_idx], 'ro')
+ax1.text(x_plot1[max_idx], y_plot1[max_idx]*1.05, f'Max Alt: {y_plot1[max_idx]:.0f}km', ha='center', color='red')
+ax1.plot(x_plot1[0], y_plot1[0], 'go', label='Start')
+ax1.plot(x_plot1[-1], y_plot1[-1], 'rx', markersize=10, label='End')
 
-# 最高点を見つけてプロット
-max_height_idx = np.argmax(y_plot)
-ax.plot(x_plot[max_height_idx], y_plot[max_height_idx], 'ro', label='最高点')
-# 最高点の高度を表示
-ax.text(x_plot[max_height_idx], y_plot[max_height_idx] + 5, 
-        f'{y_plot[max_height_idx]:.1f} km', ha='center', color='red')
+ax1.set_title('1. Altitude vs Downrange Distance (Unfolded View)')
+ax1.set_xlabel('Downrange Distance [km]')
+ax1.set_ylabel('Altitude [km]')
+ax1.grid(True)
+ax1.legend()
+ax1.axhline(y=0, color='green', linestyle='-', linewidth=2, alpha=0.5) # 地表線
 
-# 発射点と着弾点をプロット
-ax.plot(x_plot[0], y_plot[0], 'go', label='発射点')
-ax.plot(x_plot[-1], y_plot[-1], 'rx', markersize=10, label='着弾点')
+# ---------------------------------------
+# グラフ2: 地球中心座標系での軌跡 (丸い地球)
+# ---------------------------------------
+ax2 = axes[1]
 
-# グラフの装飾
-ax.set_title('弾道飛行シミュレーション (高度 vs 地表距離)')
-ax.set_xlabel('地表距離 (Downrange) [km]')
-ax.set_ylabel('高度 (Altitude) [km]')
-ax.grid(True, linestyle='--', alpha=0.7) # グリッドを表示
-ax.legend() # 凡例を表示
+# 極座標(r, theta)から直交座標(X, Y)へ変換
+# ※見やすくするため、θ=0を発射点とし、Y軸正方向(上)に向かって発射される配置にします
+X_traj = r_km * np.sin(theta_data)
+Y_traj = r_km * np.cos(theta_data)
 
-# 地表のライン（高度0）を強調
-ax.axhline(y=0, color='green', linestyle='-', linewidth=1.5)
-ax.set_ylim(bottom=-10) # 地表より少し下まで表示範囲を広げる
+# 地球の描画（水色の円）
+earth_patch = Circle((0, 0), R_EARTH_KM, color='skyblue', alpha=0.6, label='Earth')
+ax2.add_patch(earth_patch)
+# 地表面の描画（緑色の線）
+theta_circ = np.linspace(0, 2*np.pi, 360)
+ax2.plot(R_EARTH_KM*np.sin(theta_circ), R_EARTH_KM*np.cos(theta_circ), 'g-', linewidth=1.5)
 
-plt.tight_layout() # レイアウトの自動調整
-plt.show() # グラフ表示
+# 軌跡のプロット
+ax2.plot(X_traj, Y_traj, 'b-', linewidth=2, label='Trajectory')
+# 発射点と着弾点のプロット
+ax2.plot(X_traj[0], Y_traj[0], 'go', markersize=8, label='Start')
+ax2.plot(X_traj[-1], Y_traj[-1], 'rx', markersize=12, label='End')
+
+# 【重要】アスペクト比を等しくする（地球が楕円にならないように）
+ax2.set_aspect('equal', adjustable='box')
+
+ax2.set_title('2. Trajectory in Earth-Centered Coordinates (True Scale View)')
+ax2.set_xlabel('X Distance [km]')
+ax2.set_ylabel('Y Distance [km]')
+ax2.grid(True, linestyle=':')
+ax2.legend(loc='upper right')
+
+# 表示範囲の調整（軌道が見えるように自動調整した後、少しマージンを足す）
+ax2.autoscale()
+xlim = ax2.get_xlim()
+ylim = ax2.get_ylim()
+max_range = max(abs(xlim[0]), abs(xlim[1]), abs(ylim[0]), abs(ylim[1]))
+margin = max_range * 0.1
+ax2.set_xlim(-max_range - margin, max_range + margin)
+ax2.set_ylim(-max_range - margin, max_range + margin)
+
+
+plt.tight_layout() # レイアウト調整
+plt.show()
