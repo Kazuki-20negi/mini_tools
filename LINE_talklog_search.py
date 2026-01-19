@@ -7,4 +7,4 @@ def search_in_file(file_path, pattern):
     for match in matches:
         print(f"Found: '{match.group()}' at position {match.start()}-{match.end()}")
 
-search_in_file("test.txt", r"")
+search_in_file("test.txt", r"が参加しました")
