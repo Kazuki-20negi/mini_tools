@@ -10,6 +10,7 @@ def search_in_file(file_path, pattern):
                     print(f"{i}行目: {data[-1]}{line.strip()}")
 file_name="test.txt"
 
+print("---参加ログ---")
 search_in_file(file_name, r"が参加しました")
-
+print("--------------\n---退会ログ---")
 search_in_file(file_name, r"が退会しました")
