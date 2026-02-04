@@ -9,7 +9,7 @@ def search_in_file(file_path, pattern):
                 if re.search(r"^\d{4}/\d{2}/\d{2}",line):
                      data.append(line.strip())
                 if re.search(pattern, line):
-                    #print(f"{i}行目: {data[-1]}{line.strip()}")
+                    print(f"{i}行目: {data[-1]}{line.strip()}")
                     match_count+=1
     return match_count
 
@@ -48,7 +48,9 @@ file_name="hogehoge.txt"
 #search_in_file(file_name, r"が参加しました")
 #print("\n---退会ログ---")
 #search_in_file(file_name, r"が退会しました")
-print(f"累計参加者：{search_in_file(file_name, r"が参加しました")}人")
+#print(f"累計参加者：{search_in_file(file_name, r"が参加しました")}人")
 
 print("\n---発言字数---")
 print(dict(count_user_speaking(file_name,r"20本ネギ")))
+
+search_in_file(file_name, r"(?=.*宣戦布告)(?=.*).*")
