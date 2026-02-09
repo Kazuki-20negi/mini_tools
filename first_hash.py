@@ -39,4 +39,5 @@ print(f"Hash(基準): {hash_base[:10]}...")
 print(f"Hash(同じ): {hash_same[:10]}...")
 print(f"Hash(違う): {hash_diff[:10]}...")
 
-print(f"基準＝同じ：{hash_base==hash_same}")
+print(f"基準＝＝同じ：{hash_base==hash_same}")
+print(f"基準＝＝違う：{hash_base==hash_diff}")
