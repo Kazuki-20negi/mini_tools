@@ -18,10 +18,7 @@ print(hex_dig2)
 print(f"len:{len(hex_dig2)}")
 
 # ハッシュによる改ざん判定
-text_base="改ざん検知のテスト1"
-text_same="改ざん検知のテスト1"
-text_diff="改ざん検知のテスト2"
-
+print("-" * 60)
 def calculate_hash(text):
     """文字列を受け取り、SHA-256ハッシュ値を返す関数"""
     # バイト列に変換
@@ -29,3 +26,17 @@ def calculate_hash(text):
     # ハッシュ化
     hex_digest = hashlib.sha256(byte_data).hexdigest()
     return hex_digest
+
+text_base="改ざん検知のテスト1"
+text_same="改ざん検知のテスト1"
+text_diff="改ざん検知のテスト2"
+
+hash_base = calculate_hash(text_base)
+hash_same = calculate_hash(text_same)
+hash_diff = calculate_hash(text_diff)
+
+print(f"Hash(基準): {hash_base[:10]}...")
+print(f"Hash(同じ): {hash_same[:10]}...")
+print(f"Hash(違う): {hash_diff[:10]}...")
+
+print(f"基準＝同じ：{hash_base==hash_same}")
