@@ -6,7 +6,7 @@ byte_text=text.encode("utf-8")
 hash_object=hashlib.sha512(byte_text)
 hex_dig=hash_object.hexdigest()
 
-print(hex_dig)
+print(f"はじめてのハッシュ：{hex_dig}")
 print(f"len:{len(hex_dig)}")
 
 # 同一文字列からは同一のハッシュ
@@ -41,3 +41,7 @@ print(f"Hash(違う): {hash_diff[:10]}...")
 
 print(f"基準＝＝同じ：{hash_base==hash_same}")
 print(f"基準＝＝違う：{hash_base==hash_diff}")
+
+# 簡易版ハッシュアルゴリズム
+def my_hash(raw_text):
+    pass
