@@ -44,13 +44,13 @@ print(f"基準＝＝違う：{hash_base==hash_diff}")
 
 # 簡易版ハッシュアルゴリズム
 def my_hash(raw_text):
+    h1=11
+    h2=23
+    h3=27
     block_size=4
-    raw_text+="0"*(len(raw_text)%4) #パディング
+    raw_text+="0"*(block_size - (len(raw_text) % block_size)) % block_size #パディング
     result=""
     for i in range(0, len(raw_text), block_size):
-        h1=11
-        h2=23
-        h3=27
         temp=h1+raw_text[i:i+block_size]
         h1=h2^(temp<<1)
         h2=h3+(temp<<3)
