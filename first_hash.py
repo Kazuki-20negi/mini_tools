@@ -48,7 +48,7 @@ def my_hash(raw_text):
     h2=23
     h3=27
     block_size=4
-    raw_text+="0"*(block_size - (len(raw_text) % block_size)) % block_size #パディング
+    raw_text+="0"*((block_size - (len(raw_text) % block_size)) % block_size) #パディング
     result=""
     for i in range(0, len(raw_text), block_size):
         chunk_str=raw_text[i:i+block_size]
@@ -61,3 +61,6 @@ def my_hash(raw_text):
         h2=(h3+(temp<<3))& 0xFFFFFFFF
     result = f"{h1:08x}{h2:08x}"
     return result
+
+hash1 = my_hash("hello")
+print(f"Result 1: {hash1}")
