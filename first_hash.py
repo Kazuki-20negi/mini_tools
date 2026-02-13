@@ -51,8 +51,13 @@ def my_hash(raw_text):
     raw_text+="0"*(block_size - (len(raw_text) % block_size)) % block_size #パディング
     result=""
     for i in range(0, len(raw_text), block_size):
-        temp=h1+raw_text[i:i+block_size]
-        h1=h2^(temp<<1)
-        h2=h3+(temp<<3)
-        result+=str(hex(h1)+hex(h2))
+        chunk_str=raw_text[i:i+block_size]
+
+        chunk_val=0
+        for char in chunk_str:
+            chunk_val+=ord(char)
+        temp=(h1+chunk_val)& 0xFFFFFFFF
+        h1=(h2^(temp<<1))& 0xFFFFFFFF
+        h2=(h3+(temp<<3))& 0xFFFFFFFF
+    result = f"{h1:08x}{h2:08x}"
     return result
