@@ -44,23 +44,25 @@ print(f"基準＝＝違う：{hash_base==hash_diff}")
 
 # 簡易版ハッシュアルゴリズム
 def my_hash(raw_text):
-    h1=11
-    h2=23
-    h3=27
+    h1=0x6a09e667
+    h2=0xbb67ae85
+    h3=0x3c6ef372
     block_size=4
     raw_text+="0"*((block_size - (len(raw_text) % block_size)) % block_size) #パディング
     result=""
     for i in range(0, len(raw_text), block_size):
         chunk_str=raw_text[i:i+block_size]
-
         chunk_val=0
         for char in chunk_str:
             chunk_val+=ord(char)
-        temp=(h1+chunk_val)& 0xFFFFFFFF
-        h1=(h2^(temp<<1))& 0xFFFFFFFF
+        prime_multiplier = 28704862987543257019
+        temp=(h1 * prime_multiplier + chunk_val)& 0xFFFFFFFF
+        h1=(h2^temp)& 0xFFFFFFFF
         h2=(h3+(temp<<3))& 0xFFFFFFFF
     result = f"{h1:08x}{h2:08x}"
     return result
-
+print("\n簡易版ハッシュ")
 hash1 = my_hash("hello")
+hash2 = my_hash("hellp")
 print(f"Result 1: {hash1}")
+print(f"Result 2: {hash2}")
