@@ -62,6 +62,7 @@ def my_hash(raw_text):
         h1=(h2^(temp<<13))& 0xFFFFFFFF
         h2=(h3^(temp>>17))& 0xFFFFFFFF
         h3=(h4^(temp<<11))& 0xFFFFFFFF
+        h4=(h1^(temp>>23))& 0xFFFFFFFF
 
     result = f"{h1:08x}{h2:08x}"
     return result
