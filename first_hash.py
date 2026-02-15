@@ -55,12 +55,15 @@ def my_hash(raw_text):
         chunk_val=0
         for char in chunk_str:
             chunk_val+=(chunk_val << 8)^ord(char)
+
         prime_multiplier = 28704862987543257019
-        temp=(h1 ^(prime_multiplier + chunk_val))& 0xFFFFFFFF
+        temp=(h1 ^(prime_multiplier * chunk_val))& 0xFFFFFFFF
         h1=(h2^(temp<<13))& 0xFFFFFFFF
         h2=(h3^(temp>>17))& 0xFFFFFFFF
+
     result = f"{h1:08x}{h2:08x}"
     return result
+
 print("\n簡易版ハッシュ")
 hash1 = my_hash("hello")
 hash2 = my_hash("hellp")
