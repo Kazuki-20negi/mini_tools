@@ -47,6 +47,7 @@ def my_hash(raw_text):
     h1=0x6a09e667
     h2=0xbb67ae85
     h3=0x3c6ef372
+    h4=0xa54ff53a
     block_size=4
     raw_text+="0"*((block_size - (len(raw_text) % block_size)) % block_size) #パディング
     result=""
@@ -60,6 +61,7 @@ def my_hash(raw_text):
         temp=(h1 ^(prime_multiplier * chunk_val))& 0xFFFFFFFF
         h1=(h2^(temp<<13))& 0xFFFFFFFF
         h2=(h3^(temp>>17))& 0xFFFFFFFF
+        h3=(h4^(temp<<11))& 0xFFFFFFFF
 
     result = f"{h1:08x}{h2:08x}"
     return result
