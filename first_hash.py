@@ -60,18 +60,17 @@ def my_hash(raw_text):
         chunk_val=0
         for char in chunk_str:
             chunk_val=(chunk_val << 8)|ord(char)
-
         prime_multiplier = 0x5A827999
-        temp=((left_rotate(h1, 5) + h6) ^(prime_multiplier * chunk_val))& 0xFFFFFFFF
-        h1=(h2^(temp<<13))& 0xFFFFFFFF
-        h2=(h3^(temp>>17))& 0xFFFFFFFF
-        h3=(h4^(temp<<5))& 0xFFFFFFFF
-        h4=(h5^(temp>>23))& 0xFFFFFFFF
-        h5=left_rotate(h6, 30)
-        h6=temp
+        for round in range(16):
+            temp=((left_rotate(h1, 5) + h6) ^(prime_multiplier * chunk_val))& 0xFFFFFFFF
+            h1=(h2^(temp<<13))& 0xFFFFFFFF
+            h2=(h3^(temp>>17))& 0xFFFFFFFF
+            h3=(h4^(temp<<5))& 0xFFFFFFFF
+            h4=(h5^(temp>>23))& 0xFFFFFFFF
+            h5=left_rotate(h6, 30)
+            h6=temp
 
-    result = f"{h1:08x}{h2:08x}"
-    return result
+    return f"{h1:08x}{h2:08x}{h3:08x}{h4:08x}{h5:08x}{h6:08x}"
 
 print("\n簡易版ハッシュ")
 hash1 = my_hash("hello")
