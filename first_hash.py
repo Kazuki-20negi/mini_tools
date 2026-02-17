@@ -43,11 +43,15 @@ print(f"基準＝＝同じ：{hash_base==hash_same}")
 print(f"基準＝＝違う：{hash_base==hash_diff}")
 
 # 簡易版ハッシュアルゴリズム
+def left_rotate(n, b):
+    return ((n << b) | (n >> (32 - b))) & 0xFFFFFFFF
 def my_hash(raw_text):
     h1=0x6a09e667
     h2=0xbb67ae85
     h3=0x3c6ef372
     h4=0xa54ff53a
+    h5=0x510e527f
+    h6=0x9b05688c
     block_size=4
     raw_text+="0"*((block_size - (len(raw_text) % block_size)) % block_size) #パディング
     result=""
@@ -58,11 +62,13 @@ def my_hash(raw_text):
             chunk_val+=(chunk_val << 8)^ord(char)
 
         prime_multiplier = 28704862987543257019
-        temp=(h1 ^(prime_multiplier * chunk_val))& 0xFFFFFFFF
+        temp=((left_rotate(h1, 5) + h6) ^(prime_multiplier * chunk_val))& 0xFFFFFFFF
         h1=(h2^(temp<<13))& 0xFFFFFFFF
         h2=(h3^(temp>>17))& 0xFFFFFFFF
-        h3=(h4^(temp<<11))& 0xFFFFFFFF
-        h4=(h1^(temp>>23))& 0xFFFFFFFF
+        h3=(h4^(temp<<5))& 0xFFFFFFFF
+        h4=(h5^(temp>>23))& 0xFFFFFFFF
+        h5=left_rotate(h6, 30)
+        h6=temp
 
     result = f"{h1:08x}{h2:08x}"
     return result
