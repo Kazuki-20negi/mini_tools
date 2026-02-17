@@ -59,9 +59,9 @@ def my_hash(raw_text):
         chunk_str=raw_text[i:i+block_size]
         chunk_val=0
         for char in chunk_str:
-            chunk_val+=(chunk_val << 8)^ord(char)
+            chunk_val=(chunk_val << 8)|ord(char)
 
-        prime_multiplier = 28704862987543257019
+        prime_multiplier = 0x5A827999
         temp=((left_rotate(h1, 5) + h6) ^(prime_multiplier * chunk_val))& 0xFFFFFFFF
         h1=(h2^(temp<<13))& 0xFFFFFFFF
         h2=(h3^(temp>>17))& 0xFFFFFFFF
@@ -78,3 +78,5 @@ hash1 = my_hash("hello")
 hash2 = my_hash("hellp")
 print(f"Result 1: {hash1}")
 print(f"Result 2: {hash2}")
+
+print(len(hash1))
