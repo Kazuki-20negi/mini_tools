@@ -11,5 +11,8 @@ def stream_encrypt(text,key):
         #result+=chr(xor_val)
     return result
 
-encrypted_text = stream(text, key)
+encrypted_text = stream_encrypt(text, key)
 print(encrypted_text)
+
+def stream_decrypt(hex_cipher,key):
+    pass
