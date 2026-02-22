@@ -24,3 +24,6 @@ def stream_decrypt(hex_cipher,key):
         plain_val=cipher_val^ord(key[i])
         result+=chr(plain_val)
     return result
+
+decrypted = stream_decrypt(encrypted_text, key)
+print(f"【復号化後】: {decrypted}")
