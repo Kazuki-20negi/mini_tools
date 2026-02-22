@@ -16,3 +16,11 @@ print(encrypted_text)
 
 def stream_decrypt(hex_cipher,key):
     original_len=len(hex_cipher)//2
+    key=key*(original_len//len(key)) + key[:original_len % len(key)]
+    result=""
+    for i in range(original_len):
+        hex_chunk=hex_cipher[i*2:i*2+2]
+        cipher_val=int(hex_chunk,16)
+        plain_val=cipher_val^ord(key[i])
+        result+=chr(plain_val)
+    return result
