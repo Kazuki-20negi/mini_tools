@@ -15,4 +15,4 @@ encrypted_text = stream_encrypt(text, key)
 print(encrypted_text)
 
 def stream_decrypt(hex_cipher,key):
-    pass
+    original_len=len(hex_cipher)//2
