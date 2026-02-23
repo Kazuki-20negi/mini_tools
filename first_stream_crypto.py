@@ -12,7 +12,7 @@ def stream_encrypt(text,key):
     return result
 
 encrypted_text = stream_encrypt(text, key)
-print(encrypted_text)
+print(f"暗号化後：{encrypted_text}")
 
 def stream_decrypt(hex_cipher,key):
     original_len=len(hex_cipher)//2
@@ -26,4 +26,4 @@ def stream_decrypt(hex_cipher,key):
     return result
 
 decrypted = stream_decrypt(encrypted_text, key)
-print(f"【復号化後】: {decrypted}")
+print(f"復号化後: {decrypted}")
